@@ -1,11 +1,11 @@
 class PosterSerializer
     def self.format_posters(posters)
-        poster.map do |poster|
+        posters.map do |poster|
             format_single_poster(poster)
         end
     end
 
-    def self.fromat_single_poster(poster)
+    def self.format_single_poster(poster)
         {
             name: poster.name,
             description: poster.description,
