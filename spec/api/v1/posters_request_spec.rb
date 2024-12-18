@@ -29,10 +29,11 @@ describe Api::V1::PostersController, type: :request do
             expect(response).to be_successful
 
             posters = JSON.parse(response.body, symbolize_names: true)
+           
+            expect(posters[:data].length).to eq(3)
+            expect(posters[:meta][:count]).to eq(3)
 
-            expect(posters.count).to eq(3)
-
-            posters.each do |poster|
+            posters[:data].each do |poster|
                 expect(poster).to have_key(:id)
                 expect(poster[:id]).to be_an(Integer)
 
@@ -54,6 +55,47 @@ describe Api::V1::PostersController, type: :request do
                 expect(poster).to have_key(:img_url)
                 expect(poster[:img_url]).to be_a(String)
             end
+        end
+
+        it "sorts posters ascending or descending based on the query param" do
+            Poster.create(name: "DOUBT",
+            description: "Success is for other people, not you.",
+            price: 140.00,
+            year: 2020,
+            vintage: false,
+            img_url: "https://www.pluggedin.com/wp-content/uploads/2019/12/doubt-1200x720.jpg")
+
+            Poster.create(name: "FAILURE",
+            description: "Why bother trying? It's probably not worth it.",
+            price: 68.00,
+            year: 2019,
+            vintage: true,
+            img_url: "https://www.tutordoctor.co.uk/wp-content/uploads/2023/11/iStock-827879520.jpg")
+
+            Poster.create(name: "REGRET",
+            description: "Hard work rarely pays off.",
+            price: 89.00,
+            year: 2018,
+            vintage: true,
+            img_url:  "https://plus.unsplash.com/premium_photo-1661293818249-fddbddf07a5d")
+
+            get "/api/v1/posters?sort=asc"
+
+            expect(response).to be_successful
+
+            posters = JSON.parse(response.body, symbolize_names: true)
+
+            expect(posters[:data].first[:name]).to eq("DOUBT")
+            expect(posters[:data].last[:name]).to eq("REGRET")
+
+            get "/api/v1/posters?sort=desc"
+
+            expect(response).to be_successful
+
+            posters = JSON.parse(response.body, symbolize_names: true)
+
+            expect(posters[:data].first[:name]).to eq("REGRET")
+            expect(posters[:data].last[:name]).to eq("DOUBT")
         end
 
         it "can get one sony by its id" do
@@ -112,7 +154,7 @@ describe Api::V1::PostersController, type: :request do
 
             posters = JSON.parse(response.body, symbolize_names: true)
 
-            expect(posters.count).to eq(1)
+            expect(posters[:data].count).to eq(1)
 
             poster_params2 = {
                 name: "DOUBT",
@@ -136,7 +178,7 @@ describe Api::V1::PostersController, type: :request do
 
             expect(posters.count).to eq(2)
         
-            posters.each do |poster|
+            posters[:data].each do |poster|
                 expect(poster).to have_key(:id)
                 expect(poster[:id]).to be_an(Integer)
 

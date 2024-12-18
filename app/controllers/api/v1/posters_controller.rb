@@ -1,6 +1,15 @@
 class Api::V1::PostersController < ApplicationController
     def index
-        render json: Poster.all
+        posters = Poster.all
+        if  params[:sort] == 'asc'
+            posters = posters.order(:created_at)
+        else
+            posters = posters.order(created_at: :desc)
+        end
+        render json: {
+            "data": posters,
+            "meta": {count: posters.count}
+        }
     end
 
     def show
