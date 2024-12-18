@@ -160,7 +160,7 @@ describe Api::V1::PostersController, type: :request do
             end
         end
         
-        it "update the corresponding Poster (if found) with whichever details are provided by the user" do
+        it "update the corresponding Poster (if found) with the details are provided by the user" do
             id = Poster.create(name: "DOUBT",
             description: "Success is for other people, not you.",
             price: 140.00,
