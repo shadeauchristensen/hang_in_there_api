@@ -1,6 +1,10 @@
 class Api::V1::PostersController < ApplicationController
     def index
-        render json: Poster.all
+        posters = Poster.all
+        render json: {
+            "data": posters,
+            "meta": { count: posters.count }
+        }
     end
 
     def show
