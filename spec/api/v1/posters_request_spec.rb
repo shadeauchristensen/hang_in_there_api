@@ -90,4 +90,49 @@ describe "Posters API", type: :request do
         expect(poster).to have_key(:img_url)
         expect(poster[:img_url]).to be_a(String)
     end
+
+    # it "creates a new poster" do
+    #     params = {
+    #         name: "FAILURE",
+    #         description: "Why bother trying? It's probably not worth it.",
+    #         price: 68.00,
+    #         year: 2019,
+    #         vintage: true,
+    #         img_url: "https://www.tutordoctor.co.uk/wp-content/uploads/2023/11/iStock-827879520.jpg"
+    #     }
+
+    #     post "/api/v1/posters", body: params
+
+    #     expect(response).to have_http_status :created
+
+    #     get "/api/v1/posters"
+
+    #     posters = JSON.parse(response.body, symbolize_names: true)
+
+    #     expect(posters.count).to eq(1)
+
+    #     expect(poster).to have_key(:id)
+    #     expect(poster[:id]).to be_an(Integer)
+
+    #     expect(poster).to have_key(:name)
+    #     expect(poster[:name]).to be_a(String)
+
+    #     expect(poster).to have_key(:description)
+    #     expect(poster[:description]).to be_a(String)
+
+    #     expect(poster).to have_key(:price)
+    #     expect(poster[:price]).to be_a(Float)
+
+    #     expect(poster).to have_key(:year)
+    #     expect(poster[:year]).to be_an(Integer)
+
+    #     expect(poster).to have_key(:vintage)
+    #     expect(poster[:vintage]).to be_in([true, false])
+
+    #     expect(poster).to have_key(:img_url)
+    #     expect(poster[:img_url]).to be_a(String)
+    # end
+
+    it "updates a poster" do
+        
 end
