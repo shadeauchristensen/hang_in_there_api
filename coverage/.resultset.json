@@ -1,7 +1,7 @@
 {
   "RSpec": {
     "coverage": {
-      "/Users/octogrim-mac/turing_school/2mod/projects/hang_in_there_api/config/environment.rb": {
+      "/Users/jonosommers/turing_work/2mod/projects/hang_in_there_api/config/environment.rb": {
         "lines": [
           null,
           1,
@@ -10,7 +10,7 @@
           1
         ]
       },
-      "/Users/octogrim-mac/turing_school/2mod/projects/hang_in_there_api/config/application.rb": {
+      "/Users/jonosommers/turing_work/2mod/projects/hang_in_there_api/config/application.rb": {
         "lines": [
           1,
           null,
@@ -58,7 +58,7 @@
           null
         ]
       },
-      "/Users/octogrim-mac/turing_school/2mod/projects/hang_in_there_api/config/boot.rb": {
+      "/Users/jonosommers/turing_work/2mod/projects/hang_in_there_api/config/boot.rb": {
         "lines": [
           1,
           null,
@@ -66,7 +66,7 @@
           1
         ]
       },
-      "/Users/octogrim-mac/turing_school/2mod/projects/hang_in_there_api/config/environments/test.rb": {
+      "/Users/jonosommers/turing_work/2mod/projects/hang_in_there_api/config/environments/test.rb": {
         "lines": [
           1,
           null,
@@ -134,7 +134,7 @@
           null
         ]
       },
-      "/Users/octogrim-mac/turing_school/2mod/projects/hang_in_there_api/config/initializers/cors.rb": {
+      "/Users/jonosommers/turing_work/2mod/projects/hang_in_there_api/config/initializers/cors.rb": {
         "lines": [
           null,
           null,
@@ -154,7 +154,7 @@
           null
         ]
       },
-      "/Users/octogrim-mac/turing_school/2mod/projects/hang_in_there_api/config/initializers/filter_parameter_logging.rb": {
+      "/Users/jonosommers/turing_work/2mod/projects/hang_in_there_api/config/initializers/filter_parameter_logging.rb": {
         "lines": [
           null,
           null,
@@ -166,7 +166,7 @@
           null
         ]
       },
-      "/Users/octogrim-mac/turing_school/2mod/projects/hang_in_there_api/config/initializers/inflections.rb": {
+      "/Users/jonosommers/turing_work/2mod/projects/hang_in_there_api/config/initializers/inflections.rb": {
         "lines": [
           null,
           null,
@@ -186,7 +186,7 @@
           null
         ]
       },
-      "/Users/octogrim-mac/turing_school/2mod/projects/hang_in_there_api/config/routes.rb": {
+      "/Users/jonosommers/turing_work/2mod/projects/hang_in_there_api/config/routes.rb": {
         "lines": [
           1,
           null,
@@ -206,7 +206,7 @@
           null
         ]
       },
-      "/Users/octogrim-mac/turing_school/2mod/projects/hang_in_there_api/app/controllers/api/v1/posters_controller.rb": {
+      "/Users/jonosommers/turing_work/2mod/projects/hang_in_there_api/app/controllers/api/v1/posters_controller.rb": {
         "lines": [
           1,
           1,
@@ -259,20 +259,20 @@
           null
         ]
       },
-      "/Users/octogrim-mac/turing_school/2mod/projects/hang_in_there_api/app/controllers/application_controller.rb": {
+      "/Users/jonosommers/turing_work/2mod/projects/hang_in_there_api/app/controllers/application_controller.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/octogrim-mac/turing_school/2mod/projects/hang_in_there_api/app/models/poster.rb": {
+      "/Users/jonosommers/turing_work/2mod/projects/hang_in_there_api/app/models/poster.rb": {
         "lines": [
           1,
           null,
           null
         ]
       },
-      "/Users/octogrim-mac/turing_school/2mod/projects/hang_in_there_api/app/models/application_record.rb": {
+      "/Users/jonosommers/turing_work/2mod/projects/hang_in_there_api/app/models/application_record.rb": {
         "lines": [
           1,
           1,
@@ -280,6 +280,6 @@
         ]
       }
     },
-    "timestamp": 1734568584
+    "timestamp": 1734623226
   }
 }
