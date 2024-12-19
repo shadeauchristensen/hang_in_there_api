@@ -1,15 +1,14 @@
 require 'rails_helper'
 
 describe Api::V1::PostersController, type: :request do
-    
-    describe "Posters API" do
-        it "sends a list of posters" do
-            Poster.create(name: "DOUBT",
+    describe 'collection tests' do
+        before(:each) do
+            @id = Poster.create(name: "DOUBT",
             description: "Success is for other people, not you.",
             price: 140.00,
             year: 2020,
             vintage: false,
-            img_url: "https://www.pluggedin.com/wp-content/uploads/2019/12/doubt-1200x720.jpg")
+            img_url: "https://www.pluggedin.com/wp-content/uploads/2019/12/doubt-1200x720.jpg").id
 
             Poster.create(name: "FAILURE",
             description: "Why bother trying? It's probably not worth it.",
@@ -24,6 +23,9 @@ describe Api::V1::PostersController, type: :request do
             year: 2018,
             vintage: true,
             img_url:  "https://plus.unsplash.com/premium_photo-1661293818249-fddbddf07a5d")
+        end
+
+        it "sends a list of posters" do
 
             get "/api/v1/posters"
 
@@ -58,26 +60,6 @@ describe Api::V1::PostersController, type: :request do
         end
 
         it "sorts posters ascending or descending based on the query param" do
-            Poster.create(name: "DOUBT",
-            description: "Success is for other people, not you.",
-            price: 140.00,
-            year: 2020,
-            vintage: false,
-            img_url: "https://www.pluggedin.com/wp-content/uploads/2019/12/doubt-1200x720.jpg")
-
-            Poster.create(name: "FAILURE",
-            description: "Why bother trying? It's probably not worth it.",
-            price: 68.00,
-            year: 2019,
-            vintage: true,
-            img_url: "https://www.tutordoctor.co.uk/wp-content/uploads/2023/11/iStock-827879520.jpg")
-
-            Poster.create(name: "REGRET",
-            description: "Hard work rarely pays off.",
-            price: 89.00,
-            year: 2018,
-            vintage: true,
-            img_url:  "https://plus.unsplash.com/premium_photo-1661293818249-fddbddf07a5d")
 
             get "/api/v1/posters?sort=asc"
 
@@ -99,26 +81,6 @@ describe Api::V1::PostersController, type: :request do
         end
 
         it "filters out posters who name matches the query param value" do
-            Poster.create(name: "DOUBT",
-            description: "Success is for other people, not you.",
-            price: 140.00,
-            year: 2020,
-            vintage: false,
-            img_url: "https://www.pluggedin.com/wp-content/uploads/2019/12/doubt-1200x720.jpg")
-
-            Poster.create(name: "FAILURE",
-            description: "Why bother trying? It's probably not worth it.",
-            price: 68.00,
-            year: 2019,
-            vintage: true,
-            img_url: "https://www.tutordoctor.co.uk/wp-content/uploads/2023/11/iStock-827879520.jpg")
-
-            Poster.create(name: "REGRET",
-            description: "Hard work rarely pays off.",
-            price: 89.00,
-            year: 2018,
-            vintage: true,
-            img_url:  "https://plus.unsplash.com/premium_photo-1661293818249-fddbddf07a5d")
 
             get "/api/v1/posters?name=re"
 
@@ -131,26 +93,6 @@ describe Api::V1::PostersController, type: :request do
         end
 
         it "filters out posters that are above/below min/max price" do
-            Poster.create(name: "DOUBT",
-            description: "Success is for other people, not you.",
-            price: 140.00,
-            year: 2020,
-            vintage: false,
-            img_url: "https://www.pluggedin.com/wp-content/uploads/2019/12/doubt-1200x720.jpg")
-
-            Poster.create(name: "FAILURE",
-            description: "Why bother trying? It's probably not worth it.",
-            price: 68.00,
-            year: 2019,
-            vintage: true,
-            img_url: "https://www.tutordoctor.co.uk/wp-content/uploads/2023/11/iStock-827879520.jpg")
-
-            Poster.create(name: "REGRET",
-            description: "Hard work rarely pays off.",
-            price: 89.00,
-            year: 2018,
-            vintage: true,
-            img_url:  "https://plus.unsplash.com/premium_photo-1661293818249-fddbddf07a5d")
 
             get "/api/v1/posters?min_price=80"
 
@@ -170,16 +112,21 @@ describe Api::V1::PostersController, type: :request do
             expect(posters[:data].first[:attributes][:price]).to eq(68.00)
             expect(posters[:data].last[:attributes][:price]).to eq(89.00)
         end
+    end
 
-        it "can get one sony by its id" do
-            id = Poster.create(name: "DOUBT",
+    describe 'id tests' do
+        before(:each) do
+            @id = Poster.create(name: "DOUBT",
             description: "Success is for other people, not you.",
             price: 140.00,
             year: 2020,
             vintage: false,
             img_url: "https://www.pluggedin.com/wp-content/uploads/2019/12/doubt-1200x720.jpg").id
+        end
 
-            get "/api/v1/posters/#{id}"
+        it "can get one sony by its id" do
+
+            get "/api/v1/posters/#{@id}"
 
             poster = JSON.parse(response.body, symbolize_names: true)
 
@@ -206,7 +153,34 @@ describe Api::V1::PostersController, type: :request do
             expect(poster[:data][:attributes]).to have_key(:img_url)
             expect(poster[:data][:attributes][:img_url]).to be_a(String)
         end
+        
+        it "update the corresponding Poster (if found) with the details are provided by the user" do
+            
+            previous_name = Poster.last.name
+            poster_params = {name: "NO FAITH"}
+            headers = {"CONTENT_TYPE" => "application/json"}
 
+            patch "/api/v1/posters/#{@id}", headers: headers, params: JSON.generate({poster: poster_params})
+            poster = Poster.find_by(id: @id)
+
+            expect(response).to be_successful
+            expect(poster.name).to_not eq(previous_name)
+            expect(poster.name).to eq("NO FAITH")
+        end
+
+        it "can destroy a poster" do
+        
+            expect(Poster.count).to eq(1)
+        
+            delete "/api/v1/posters/#{@id}"
+        
+            expect(response).to be_successful
+            expect(Poster.count).to eq(0)
+            expect{Poster.find(@id)}.to raise_error(ActiveRecord::RecordNotFound)
+        end
+    end
+
+    describe "post endpoint" do
         it "creates a new poster" do
             poster_params = {
                 name: "FAILURE",
@@ -274,42 +248,5 @@ describe Api::V1::PostersController, type: :request do
                 expect(poster[:attributes][:img_url]).to be_a(String)
             end
         end
-        
-        it "update the corresponding Poster (if found) with the details are provided by the user" do
-            id = Poster.create(name: "DOUBT",
-            description: "Success is for other people, not you.",
-            price: 140.00,
-            year: 2020,
-            vintage: false,
-            img_url: "https://www.pluggedin.com/wp-content/uploads/2019/12/doubt-1200x720.jpg").id
-
-            previous_name = Poster.last.name
-            poster_params = {name: "NO FAITH"}
-            headers = {"CONTENT_TYPE" => "application/json"}
-
-            patch "/api/v1/posters/#{id}", headers: headers, params: JSON.generate({poster: poster_params})
-            poster = Poster.find_by(id: id)
-
-            expect(response).to be_successful
-            expect(poster.name).to_not eq(previous_name)
-            expect(poster.name).to eq("NO FAITH")
-        end
-
-        it "can destroy a poster" do
-            id = Poster.create(name: "DOUBT",
-            description: "Success is for other people, not you.",
-            price: 140.00,
-            year: 2020,
-            vintage: false,
-            img_url: "https://www.pluggedin.com/wp-content/uploads/2019/12/doubt-1200x720.jpg").id
-        
-            expect(Poster.count).to eq(1)
-        
-            delete "/api/v1/posters/#{id}"
-        
-            expect(response).to be_successful
-            expect(Poster.count).to eq(0)
-            expect{Poster.find(id)}.to raise_error(ActiveRecord::RecordNotFound)
-        end  
     end
 end
