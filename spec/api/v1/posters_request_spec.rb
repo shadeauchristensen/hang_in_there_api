@@ -98,6 +98,79 @@ describe Api::V1::PostersController, type: :request do
             expect(posters[:data].last[:name]).to eq("DOUBT")
         end
 
+        it "filters out posters who name matches the query param value" do
+            Poster.create(name: "DOUBT",
+            description: "Success is for other people, not you.",
+            price: 140.00,
+            year: 2020,
+            vintage: false,
+            img_url: "https://www.pluggedin.com/wp-content/uploads/2019/12/doubt-1200x720.jpg")
+
+            Poster.create(name: "FAILURE",
+            description: "Why bother trying? It's probably not worth it.",
+            price: 68.00,
+            year: 2019,
+            vintage: true,
+            img_url: "https://www.tutordoctor.co.uk/wp-content/uploads/2023/11/iStock-827879520.jpg")
+
+            Poster.create(name: "REGRET",
+            description: "Hard work rarely pays off.",
+            price: 89.00,
+            year: 2018,
+            vintage: true,
+            img_url:  "https://plus.unsplash.com/premium_photo-1661293818249-fddbddf07a5d")
+
+            get "/api/v1/posters?name=re"
+
+            posters = JSON.parse(response.body, symbolize_names: true)
+
+            expect(response).to be_successful
+            expect(posters[:data].length).to eq(2)
+            expect(posters[:data].first[:name]).to eq("FAILURE")
+            expect(posters[:data].last[:name]).to eq("REGRET")
+        end
+
+        it "filters out posters that are above/below min/max price" do
+            Poster.create(name: "DOUBT",
+            description: "Success is for other people, not you.",
+            price: 140.00,
+            year: 2020,
+            vintage: false,
+            img_url: "https://www.pluggedin.com/wp-content/uploads/2019/12/doubt-1200x720.jpg")
+
+            Poster.create(name: "FAILURE",
+            description: "Why bother trying? It's probably not worth it.",
+            price: 68.00,
+            year: 2019,
+            vintage: true,
+            img_url: "https://www.tutordoctor.co.uk/wp-content/uploads/2023/11/iStock-827879520.jpg")
+
+            Poster.create(name: "REGRET",
+            description: "Hard work rarely pays off.",
+            price: 89.00,
+            year: 2018,
+            vintage: true,
+            img_url:  "https://plus.unsplash.com/premium_photo-1661293818249-fddbddf07a5d")
+
+            get "/api/v1/posters?min_price=80"
+
+            posters = JSON.parse(response.body, symbolize_names: true)
+
+            expect(response).to be_successful
+            expect(posters[:data].length).to eq(2)
+            expect(posters[:data].first[:price]).to eq(89.00)
+            expect(posters[:data].last[:price]).to eq(140.00)
+
+            get "/api/v1/posters?max_price=100"
+
+            posters = JSON.parse(response.body, symbolize_names: true)
+
+            expect(response).to be_successful
+            expect(posters[:data].length).to eq(2)
+            expect(posters[:data].first[:price]).to eq(68.00)
+            expect(posters[:data].last[:price]).to eq(89.00)
+        end
+
         it "can get one sony by its id" do
             id = Poster.create(name: "DOUBT",
             description: "Success is for other people, not you.",
