@@ -3,9 +3,21 @@ class Api::V1::PostersController < ApplicationController
         posters = Poster.all
         if  params[:sort] == 'asc'
             posters = posters.order(:created_at)
-        else
+        elsif
+            params[:sort] == 'desc'
             posters = posters.order(created_at: :desc)
+        elsif 
+            params[:name] == "#{params[:name]}"
+            posters = Poster.where("name ILIKE ?", "%#{params[:name]}%").order(:name)
+        elsif 
+            params[:min_price] == "#{params[:min_price]}"
+            posters = posters.where("price >= #{params[:min_price]}").order(:price)
+        elsif 
+            params[:max_price] == "#{params[:max_price]}"
+            posters = posters.where("price <= #{params[:max_price]}").order(:price)
         end
+
+
         render json: {
             "data": posters,
             "meta": {count: posters.count}
