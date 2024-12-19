@@ -29,31 +29,30 @@ describe Api::V1::PostersController, type: :request do
             expect(response).to be_successful
 
             posters = JSON.parse(response.body, symbolize_names: true)
-           
             expect(posters[:data].length).to eq(3)
             expect(posters[:meta][:count]).to eq(3)
-
+            
             posters[:data].each do |poster|
                 expect(poster).to have_key(:id)
-                expect(poster[:id]).to be_an(Integer)
+                expect(poster[:id]).to be_an(String)
 
-                expect(poster).to have_key(:name)
-                expect(poster[:name]).to be_a(String)
+                expect(poster[:attributes]).to have_key(:name)
+                expect(poster[:attributes][:name]).to be_a(String)
 
-                expect(poster).to have_key(:description)
-                expect(poster[:description]).to be_a(String)
+                expect(poster[:attributes]).to have_key(:description)
+                expect(poster[:attributes][:description]).to be_a(String)
 
-                expect(poster).to have_key(:price)
-                expect(poster[:price]).to be_a(Float)
+                expect(poster[:attributes]).to have_key(:price)
+                expect(poster[:attributes][:price]).to be_a(Float)
 
-                expect(poster).to have_key(:year)
-                expect(poster[:year]).to be_an(Integer)
+                expect(poster[:attributes]).to have_key(:year)
+                expect(poster[:attributes][:year]).to be_an(Integer)
 
-                expect(poster).to have_key(:vintage)
-                expect(poster[:vintage]).to be_in([true, false])
+                expect(poster[:attributes]).to have_key(:vintage)
+                expect(poster[:attributes][:vintage]).to be_in([true, false])
 
-                expect(poster).to have_key(:img_url)
-                expect(poster[:img_url]).to be_a(String)
+                expect(poster[:attributes]).to have_key(:img_url)
+                expect(poster[:attributes][:img_url]).to be_a(String)
             end
         end
 
@@ -84,9 +83,9 @@ describe Api::V1::PostersController, type: :request do
             expect(response).to be_successful
 
             posters = JSON.parse(response.body, symbolize_names: true)
-
-            expect(posters[:data].first[:name]).to eq("DOUBT")
-            expect(posters[:data].last[:name]).to eq("REGRET")
+            
+            expect(posters[:data].first[:attributes][:name]).to eq("DOUBT")
+            expect(posters[:data].last[:attributes][:name]).to eq("REGRET")
 
             get "/api/v1/posters?sort=desc"
 
@@ -94,8 +93,8 @@ describe Api::V1::PostersController, type: :request do
 
             posters = JSON.parse(response.body, symbolize_names: true)
 
-            expect(posters[:data].first[:name]).to eq("REGRET")
-            expect(posters[:data].last[:name]).to eq("DOUBT")
+            expect(posters[:data].first[:attributes][:name]).to eq("REGRET")
+            expect(posters[:data].last[:attributes][:name]).to eq("DOUBT")
         end
 
         it "filters out posters who name matches the query param value" do
@@ -126,8 +125,8 @@ describe Api::V1::PostersController, type: :request do
 
             expect(response).to be_successful
             expect(posters[:data].length).to eq(2)
-            expect(posters[:data].first[:name]).to eq("FAILURE")
-            expect(posters[:data].last[:name]).to eq("REGRET")
+            expect(posters[:data].first[:attributes][:name]).to eq("FAILURE")
+            expect(posters[:data].last[:attributes][:name]).to eq("REGRET")
         end
 
         it "filters out posters that are above/below min/max price" do
@@ -158,8 +157,8 @@ describe Api::V1::PostersController, type: :request do
 
             expect(response).to be_successful
             expect(posters[:data].length).to eq(2)
-            expect(posters[:data].first[:price]).to eq(89.00)
-            expect(posters[:data].last[:price]).to eq(140.00)
+            expect(posters[:data].first[:attributes][:price]).to eq(89.00)
+            expect(posters[:data].last[:attributes][:price]).to eq(140.00)
 
             get "/api/v1/posters?max_price=100"
 
@@ -167,8 +166,8 @@ describe Api::V1::PostersController, type: :request do
 
             expect(response).to be_successful
             expect(posters[:data].length).to eq(2)
-            expect(posters[:data].first[:price]).to eq(68.00)
-            expect(posters[:data].last[:price]).to eq(89.00)
+            expect(posters[:data].first[:attributes][:price]).to eq(68.00)
+            expect(posters[:data].last[:attributes][:price]).to eq(89.00)
         end
 
         it "can get one sony by its id" do
@@ -184,27 +183,27 @@ describe Api::V1::PostersController, type: :request do
             poster = JSON.parse(response.body, symbolize_names: true)
 
             expect(response).to be_successful
+            
+            expect(poster[:data]).to have_key(:id)
+            expect(poster[:data][:id]).to be_an(String)
 
-            expect(poster).to have_key(:id)
-            expect(poster[:id]).to be_an(Integer)
+            expect(poster[:data][:attributes]).to have_key(:name)
+            expect(poster[:data][:attributes][:name]).to be_a(String)
 
-            expect(poster).to have_key(:name)
-            expect(poster[:name]).to be_a(String)
+            expect(poster[:data][:attributes]).to have_key(:description)
+            expect(poster[:data][:attributes][:description]).to be_a(String)
 
-            expect(poster).to have_key(:description)
-            expect(poster[:description]).to be_a(String)
+            expect(poster[:data][:attributes]).to have_key(:price)
+            expect(poster[:data][:attributes][:price]).to be_a(Float)
 
-            expect(poster).to have_key(:price)
-            expect(poster[:price]).to be_a(Float)
+            expect(poster[:data][:attributes]).to have_key(:year)
+            expect(poster[:data][:attributes][:year]).to be_an(Integer)
 
-            expect(poster).to have_key(:year)
-            expect(poster[:year]).to be_an(Integer)
+            expect(poster[:data][:attributes]).to have_key(:vintage)
+            expect(poster[:data][:attributes][:vintage]).to be_in([true, false])
 
-            expect(poster).to have_key(:vintage)
-            expect(poster[:vintage]).to be_in([true, false])
-
-            expect(poster).to have_key(:img_url)
-            expect(poster[:img_url]).to be_a(String)
+            expect(poster[:data][:attributes]).to have_key(:img_url)
+            expect(poster[:data][:attributes][:img_url]).to be_a(String)
         end
 
         it "creates a new poster" do
@@ -253,25 +252,25 @@ describe Api::V1::PostersController, type: :request do
         
             posters[:data].each do |poster|
                 expect(poster).to have_key(:id)
-                expect(poster[:id]).to be_an(Integer)
+                expect(poster[:id]).to be_an(String)
 
-                expect(poster).to have_key(:name)
-                expect(poster[:name]).to be_a(String)
+                expect(poster[:attributes]).to have_key(:name)
+                expect(poster[:attributes][:name]).to be_a(String)
 
-                expect(poster).to have_key(:description)
-                expect(poster[:description]).to be_a(String)
+                expect(poster[:attributes]).to have_key(:description)
+                expect(poster[:attributes][:description]).to be_a(String)
 
-                expect(poster).to have_key(:price)
-                expect(poster[:price]).to be_a(Float)
+                expect(poster[:attributes]).to have_key(:price)
+                expect(poster[:attributes][:price]).to be_a(Float)
 
-                expect(poster).to have_key(:year)
-                expect(poster[:year]).to be_an(Integer)
+                expect(poster[:attributes]).to have_key(:year)
+                expect(poster[:attributes][:year]).to be_an(Integer)
 
-                expect(poster).to have_key(:vintage)
-                expect(poster[:vintage]).to be_in([true, false])
+                expect(poster[:attributes]).to have_key(:vintage)
+                expect(poster[:attributes][:vintage]).to be_in([true, false])
 
-                expect(poster).to have_key(:img_url)
-                expect(poster[:img_url]).to be_a(String)
+                expect(poster[:attributes]).to have_key(:img_url)
+                expect(poster[:attributes][:img_url]).to be_a(String)
             end
         end
         
