@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 describe Api::V1::PostersController, type: :request do
+    
     describe "Posters API" do
         it "sends a list of posters" do
             Poster.create(name: "DOUBT",
